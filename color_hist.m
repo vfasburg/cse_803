@@ -1,8 +1,8 @@
-% creates a custom histogram where the hue values of each image pixel are
+% Creates a custom histogram where the hue values of each image pixel are
 % sorted into bins, weighted by their saturation and intensity. This
-% memoves the influence of whiteness and blackness, leaving only color
+% removes the influence of whiteness and blackness, leaving only color
 % information in the histogram. Histogram is shifted so lowest energy areas
-% are at the cut-off, so that a gaussian isn't disrupted by the rollover of
+% are at the cut-off, so that a Gaussian isn't disrupted by the rollover of
 % an angle value (red is vulnerable to this).
 function color_hist(img)
     hsiImg = rgb2hsv(img);
