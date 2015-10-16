@@ -35,5 +35,8 @@ function color_hist(img)
     bar(histo);
     str = sprintf('Histogram shifted down by %d degrees', minShift*360/numBins);
     title(str);
-
+    
+    mu = mean(
+    
+    
 end
