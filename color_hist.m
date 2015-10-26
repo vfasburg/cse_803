@@ -4,7 +4,7 @@
 % information in the histogram. Histogram is shifted so lowest energy areas
 % are at the cut-off, so that a Gaussian isn't disrupted by the rollover of
 % an angle value (red is vulnerable to this).
-function color_hist(img)
+function histo = color_hist(img)
     hsiImg = rgb2hsv(img);
     hues = hsiImg(:,:,1);
     saturations = hsiImg(:,:,2);
