@@ -1,6 +1,5 @@
-function thresholds = choose_threshold(img)
-    img = rgb2gray(img);
-    H = hist(cast(img(:), 'double'), 128);
+function thresholds = choose_thresholds(greyImg)
+    H = hist(cast(greyImg(:), 'double'), 128);
     for len = [15 17]
         H = conv(H, gausswin(len));
         H = H(floor(len/2):end-floor(len/2)-1);
@@ -13,5 +12,6 @@ function thresholds = choose_threshold(img)
         end
     end
     thresholds = thresholds * 2;
-    bar(H);
+    thresholds = [0 thresholds 256];
+    % bar(H);
 end
