@@ -105,5 +105,9 @@ texture_energy_maps(:,:,[4,8,12,9,13,14]) = [];
 % Determine the mode of each texture energy map
 texture_energy_measure_vector = zeros(1, 9);
 for i = 1:9
-    texture_energy_measure_vector(i) = mode(mode(texture_energy_maps(:,:,i)));
+    % Set all zeros in the matrix to be "NaN" so they are not counted in
+    % the mode operation
+    current_TEM = texture_energy_maps(:,:,i);
+    current_TEM(current_TEM==0) = NaN;
+    texture_energy_measure_vector(i) = mode(mode(current_TEM));
 end
