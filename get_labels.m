@@ -1,5 +1,6 @@
 function labels = get_labels(filename)
-    classes = ['apple   '; 'banana  '; 'fries   '; 'broccoli'];
+    classes = ['apple     '; 'banana    '; 'fries     '; 'broccoli  ';...
+               'strawberry'; 'tomato    '];
     classes = cellstr(classes);
     labels = {};
     for idx = 1:length(classes)
