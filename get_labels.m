@@ -1,7 +1,5 @@
 function labels = get_labels(filename)
-    classes = ['apple     '; 'banana    '; 'fries     '; 'broccoli  ';...
-               'strawberry'; 'tomato    '];
-    classes = cellstr(classes);
+    classes = getClassNames();
     labels = {};
     for idx = 1:length(classes)
         if(~isempty(strfind(filename, classes{idx})))

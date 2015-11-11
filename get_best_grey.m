@@ -8,7 +8,7 @@ function fullGreyImg = get_best_grey(img)
     greyImg = img(:,:,maxColor);
     smooth_len = 7;
     half_len = floor(smooth_len/2);
-    greyImg = conv2(greyImg, ones(smooth_len));
+    greyImg = conv2(cast(greyImg, 'single'), ones(smooth_len));
     
     greyImg = greyImg(smooth_len:end-smooth_len+1,smooth_len:end-smooth_len+1);
     %restore it to correct size
