@@ -1,4 +1,4 @@
-function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_803\Training_Images'
+function test(trainingData, folderPath)
     dirData = dir(folderPath);
     data = struct([]);
     for idx = 1:length(dirData)
@@ -14,8 +14,6 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
             if(size(img,1)*size(img,2) > 250000)
                 img = imresize(img, sqrt(250000/(size(img,1)*size(img,2))));
             end
-            labels = get_labels(file);
-            data(end+1).('labels') = labels;
             greyImg = get_best_grey(img);
             [thresholds, H] = choose_thresholds(greyImg);
             %training data only has 1 food, so only need 1 threshold
@@ -34,12 +32,9 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
-                imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
-                featureVector = get_features(region);
-                data(end).('features') = featureVector;
+                label = classify(trainingData, region);
+                fprintf('file: %s label: %s\n', file, label);
             end
         end
     end
-    
-    classStats = get_class_data(data);
 end
