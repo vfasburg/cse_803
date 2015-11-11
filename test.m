@@ -32,7 +32,7 @@ function test(trainingData, folderPath)
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
-                label = classify(trainingData, region);
+                label = classify(trainingData, region, mask);
                 fprintf('file: %s label: %s\n', file, label);
             end
         end

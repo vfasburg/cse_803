@@ -1,7 +1,8 @@
-% takes classStats (output from get_class_data), and image
+% takes classStats (output from get_class_data), image, and the mask
+% indicating the location of the food item in the full image
 % returns best label to be attached to that image
-function label = classify(classStats, img)
-    imgFeatures = get_features(img);
+function label = classify(classStats, img, mask)
+    imgFeatures = get_features(img, mask);
     minWeightedDist = inf;
     label = '';
     classes = fieldnames(classStats);
