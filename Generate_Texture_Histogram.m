@@ -3,11 +3,13 @@
 % Filename: Generate_Texture_Histogram.m
 
 %% Generate_Texture_Histograms: TODO
-% Input: image, an r x c x 3 matrix of pixel intensity values
-%        region_mask, an r x c logical matrix indicating the food item
+% Input : image, an r x c x 3 matrix of pixel intensity values
+%         region_mask, an r x c logical matrix indicating the food item
 %                     region in the image
-%        in_option, TODO
-% Output: TODO
+%         in_option, 'grayscale' or 'binary', indicating what type of image
+%                    should be passed to the imGradient function
+% Output: counts, the counts for a normalized 8-bin histogram of gradient
+%                 directions weighted by the magnitude of the gradients
 function [counts] = Generate_Texture_Histogram( image, region_mask, in_option )
 
 % Input Assumption: the background of the image has been blacked out
