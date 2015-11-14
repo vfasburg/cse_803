@@ -1,5 +1,5 @@
 function classes = getClassNames()
-    classes = ['apple     '; 'banana    '; 'fries     '; 'broccoli  ';...
-               'strawberry'; 'tomato    '];
+    classes = ['applered   '; 'appleyellow'; 'applegreen '; 'banana     '; 'fries      '; ...
+               'strawberry '; 'tomato     '; 'salad      '; 'rice       '; 'broccoli   '];
     classes = cellstr(classes);
 end

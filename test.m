@@ -1,4 +1,9 @@
 function test(trainingData, folderPath)
+    if nargin < 2
+        folderPath = '.\Testing_Images';
+    end
+    correct = 0;
+    incorrect = 0;
     dirData = dir(folderPath);
     data = struct([]);
     for idx = 1:length(dirData)
@@ -34,7 +39,13 @@ function test(trainingData, folderPath)
                 % imshow(region);
                 label = classify(trainingData, region, mask);
                 fprintf('file: %s label: %s\n', file, label);
+                if ~isempty(strfind(file, label))
+                    correct = correct + 1;
+                else
+                    incorrect = incorrect + 1;
+                end
             end
         end
     end
+    fprintf('%2.2f percent correct. %d out of %d.\n', 100*correct/(correct+incorrect),correct, correct+incorrect);
 end

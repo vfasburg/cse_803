@@ -15,6 +15,9 @@ function label = classify(classStats, img, mask)
         if(dist < minWeightedDist)
             minWeightedDist = dist;
             label = classes{idx};
+            if ~isempty(strfind(label, 'apple'))
+                label = 'apple';
+            end
         end
     end
 end
