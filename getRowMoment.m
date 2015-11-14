@@ -1,4 +1,4 @@
-function objectRowMoment = myRowMoment( image, colorNum )
+function objectRowMoment = getRowMoment( image, colorNum )
 % inputs: a colored binary image and the "color" of the object
 %         you are intersted in (1, 2, 3, 4, etc).
 %
@@ -6,8 +6,8 @@ function objectRowMoment = myRowMoment( image, colorNum )
 
     [row,~] = find(image == colorNum);
     
-    objectCentroid = myCentroid(image, colorNum);
-    objectArea = myArea(image, colorNum);
+    objectCentroid = getCentroid(image, colorNum);
+    objectArea = getArea(image, colorNum);
     
     objectRowMoment = sum( ( row - objectCentroid(1) ).^2 ) ./ objectArea;
 

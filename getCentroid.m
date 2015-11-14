@@ -1,4 +1,4 @@
-function objectCentroid = myCentroid( image, colorNum )
+function objectCentroid = getCentroid( image, colorNum )
 % inputs: a colored binary image and the "color" of the object
 %         you are intersted in (1, 2, 3, 4, etc).
 %
@@ -6,7 +6,7 @@ function objectCentroid = myCentroid( image, colorNum )
 
     [row,col] = find(image == colorNum);
     
-    objectArea = myArea(image, colorNum);
+    objectArea = getArea(image, colorNum);
     
     objectCentroid = [ (sum(row) ./ objectArea), (sum(col) ./ objectArea) ];
 end

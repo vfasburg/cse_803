@@ -1,12 +1,12 @@
-function objectCircularity = myCircularity( image, colorNum )
+function objectCircularity = getCircularity( image, colorNum )
 % inputs: a colored binary image and the "color" of the object
 %         you are intersted in (1, 2, 3, 4, etc).
 %
 % return: the circularity of the object
 
-    objectCentroid = myCentroid(image, colorNum);
+    objectCentroid = getCentroid(image, colorNum);
     
-    borderImage = myBorder(image);
+    borderImage = getBorder(image);
     [row,col] = find(borderImage == colorNum);
     
     sumMeanRadDist = sum( sqrt( (objectCentroid(1) - row).^2 + (objectCentroid(2) - col).^2 ) );

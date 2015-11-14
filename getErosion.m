@@ -1,4 +1,4 @@
-function erosionImage = myErosion( image )
+function erosionImage = getErosion( image )
 % inputs: a binary image
 %
 % return: a binary image of the erosion
