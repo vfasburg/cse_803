@@ -1,6 +1,6 @@
 % CSE 803: Meal Recognition Project
 % Authors: Vince Fasburg, Bonnie Reiff, Josh Thomas
-% Filename: Generate_Texture_Histograms.m
+% Filename: Generate_Texture_Histogram.m
 
 %% Generate_Texture_Histograms: TODO
 % Input: image, an r x c x 3 matrix of pixel intensity values
@@ -8,7 +8,7 @@
 %                     region in the image
 %        in_option, TODO
 % Output: TODO
-function [counts] = Generate_Texture_Histograms( image, region_mask, in_option )
+function [counts] = Generate_Texture_Histogram( image, region_mask, in_option )
 
 % Input Assumption: the background of the image has been blacked out
 % (every pixel not part of food item has intensity == 0)
