@@ -4,7 +4,7 @@
 % information in the histogram. Histogram is shifted so lowest energy areas
 % are at the cut-off, so that a Gaussian isn't disrupted by the rollover of
 % an angle value (red is vulnerable to this).
-function maxHue = color_hist(img)
+function colorfeature = color_hist(img)
     hsiImg = rgb2hsv(img);
     hues = hsiImg(:,:,1);
     saturations = hsiImg(:,:,2);
@@ -47,4 +47,19 @@ function maxHue = color_hist(img)
     
     %convert to max hue degrees
     maxHue = mod((maxIdx + minShift) * 360/numBins, 360);
+    %calcuate std from histo
+    [high, low, prevHigh, prevLow] = deal(maxIdx);
+    while (high<numBins && histo(high)<=histo(prevHigh))
+        prevHigh = high;
+        high = high+1;
+    end
+    while (low>1 && histo(low)<=histo(prevLow))
+        prevLow = low;
+        low=low-1;
+    end
+    mainColorHisto = histo(low:high);
+    binMidpoints = ((low-1/2)*360/numBins:360/numBins:(high-1/2)*360/numBins)';
+    histMean = sum(mainColorHisto .* binMidpoints)/sum(mainColorHisto);
+    stddev = sum(mainColorHisto .* (binMidpoints - histMean).^2)/sum(mainColorHisto);
+    colorfeature = [maxHue stddev];
 end

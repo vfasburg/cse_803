@@ -6,7 +6,7 @@ function test(trainingData, folderPath)
     incorrect = 0;
     dirData = dir(folderPath);
     data = struct([]);
-    for idx = 1:length(dirData)
+    parfor idx = 1:length(dirData)
         file = dirData(idx).name;
         if(length(file) > 4 & file(end-3:end) == '.jpg')
             try

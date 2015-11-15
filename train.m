@@ -1,8 +1,20 @@
 function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_803\Training_Images'
     dirData = dir(folderPath);
-    data = struct([]);
+    
+    %get number of training samples
     for idx = 1:length(dirData)
         file = dirData(idx).name;
+        if(length(file) > 4 & file(end-3:end) == '.jpg')
+            if ~exist('filenames', 'var');
+                filenames = char(file);
+            else
+                filenames = char(filenames,file);
+            end
+        end
+    end
+    data = struct([]);
+    parfor idx = 1:size(filenames,1)
+        file = strtrim(filenames(idx,:));
         if(length(file) > 4 & file(end-3:end) == '.jpg')
             try
                 img = imread(strcat(folderPath,'\',file));
@@ -15,7 +27,7 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 img = imresize(img, sqrt(250000/(size(img,1)*size(img,2))));
             end
             labels = get_labels(file);
-            data(end+1).('labels') = labels;
+            data(idx).('labels') = labels;
             greyImg = get_best_grey(img);
             [thresholds, H] = choose_thresholds(greyImg);
             %training data only has 1 food, so only need 1 threshold
@@ -36,10 +48,9 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 % imshow(region);
                 %imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
                 featureVector = get_features(region, mask);
-                data(end).('features') = featureVector;
+                data(idx).('features') = featureVector;
             end
         end
     end
-    
     classStats = get_class_data(data);
 end

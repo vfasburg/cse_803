@@ -13,5 +13,4 @@ function [thresholds, H] = choose_thresholds(greyImg)
     end
     thresholds = thresholds * 2;
     thresholds = [0 thresholds 256];
-    bar(H);
 end
