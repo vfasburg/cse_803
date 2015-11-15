@@ -2,12 +2,22 @@ function test(trainingData, folderPath)
     if nargin < 2
         folderPath = '.\Testing_Images';
     end
-    correct = 0;
-    incorrect = 0;
+
     dirData = dir(folderPath);
-    data = struct([]);
-    parfor idx = 1:length(dirData)
+        %get number of training samples
+    for idx = 1:length(dirData)
         file = dirData(idx).name;
+        if(length(file) > 4 & file(end-3:end) == '.jpg')
+            if ~exist('filenames', 'var');
+                filenames = char(file);
+            else
+                filenames = char(filenames,file);
+            end
+        end
+    end
+    data = struct([]);
+    parfor idx = 1:size(filenames,1)
+        file = strtrim(filenames(idx,:));
         if(length(file) > 4 & file(end-3:end) == '.jpg')
             try
                 img = imread(strcat(folderPath,'\',file));
@@ -15,6 +25,7 @@ function test(trainingData, folderPath)
                 fprintf('file: %s has unsupported formatting', file);
                 continue;
             end
+            data(idx).('file') = file;
             %if img is bigger than ~500x500, shrink it
             if(size(img,1)*size(img,2) > 250000)
                 img = imresize(img, sqrt(250000/(size(img,1)*size(img,2))));
@@ -38,14 +49,23 @@ function test(trainingData, folderPath)
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
                 label = classify(trainingData, region, mask);
-                fprintf('file: %s label: %s\n', file, label);
-                if ~isempty(strfind(file, label))
-                    correct = correct + 1;
-                else
-                    incorrect = incorrect + 1;
-                end
+                data(idx).('label') = label;
             end
         end
     end
-    fprintf('%2.2f percent correct. %d out of %d.\n', 100*correct/(correct+incorrect),correct, correct+incorrect);
+    
+    correct = 0;
+    incorrect = 0;
+    
+    for idx = 1:length(data)
+        file = data(idx).('file');
+        label = data(idx).('label');
+        fprintf('file: %s label: %s\n', file, label);
+        if ~isempty(strfind(file, label))
+            correct = correct + 1;
+        else
+            incorrect = incorrect + 1;
+        end
+    end
+    fprintf('%2.2f percent correct. %d out of %d.\n', 100*correct/(correct+incorrect),correct, correct+incorrect);    
 end
