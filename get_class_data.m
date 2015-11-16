@@ -14,8 +14,14 @@ function classStats = get_class_data(sampleData)
     
     classes = fieldnames(classData);
     classStats = struct();
+    featureMax = -inf*ones(size(sampleData(sample).features));
+    featureMin =  inf*ones(size(sampleData(sample).features));
     for idx = 1:length(classes)
-        classStats.(classes{idx}).('means') = mean(classData.(classes{idx}));
-        classStats.(classes{idx}).('devs') = std(classData.(classes{idx}));
+        curData = classData.(classes{idx});
+        classStats.(classes{idx}).('means') = mean(curData);
+        classStats.(classes{idx}).('devs') = std(curData);
+        maxCurData = max(curData);
+        featureMax(maxCurData>featureMax) = maxCurData(maxCurData>featureMax);
     end
+    classStats.('featureMax') = featureMax;
 end

@@ -52,5 +52,6 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
             end
         end
     end
+    
     classStats = get_class_data(data);
 end
