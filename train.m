@@ -43,6 +43,7 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 end
                 mask = (greyImg >= regionStart & greyImg < regionEnd);
                 %mask = imclose(mask, strel('disk', 10)); %replace with hole filling alg
+                mask = imfill(mask,'holes');
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
