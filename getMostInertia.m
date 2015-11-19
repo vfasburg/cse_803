@@ -8,7 +8,7 @@ function [ objectMostInertia, theta ] = getMostInertia( image, colorNum )
     objectRowMoment = getRowMoment(image,colorNum);
     objectColMoment = getColMoment(image,colorNum);
     
-    theta = (atan2d( (2 .* objectMixMoment), (objectRowMoment - objectColMoment) ) ./ 2);
+    theta = (180/pi*atan2( (2 .* objectMixMoment), (objectRowMoment - objectColMoment) ) ./ 2);
     
     inertia_1 = ( ( (sind(theta)).^2 ) .* objectRowMoment ) - ...
                     ( 2 .* sind(theta) .* cosd(theta) .* objectMixMoment ) + ...

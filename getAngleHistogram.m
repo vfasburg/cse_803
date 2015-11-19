@@ -46,7 +46,7 @@ function objectAngleHistogramNorm = getAngleHistogram( mask, stepSize, colorNum 
                         colDiff = colNext - colCurrent;
 
                         % in range 0 to 180 and 0 to -180
-                        angle = round( atan2d(rowDiff, colDiff) );
+                        angle = round( 180/pi*atan2(rowDiff, colDiff) );
 
                         % put in range 1 - 360 degrees
                         if angle <= 0
