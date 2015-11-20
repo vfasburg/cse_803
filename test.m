@@ -4,8 +4,7 @@ function test(trainingData, folderPath)
     end
 
     dirData = dir(folderPath);
-    cd(folderPath);
-        %get number of training samples
+    %get number of training samples
     for idx = 1:length(dirData)
         file = dirData(idx).name;
         if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
@@ -71,7 +70,7 @@ function test(trainingData, folderPath)
 %     end
 %     fprintf('%2.2f percent correct. %d out of %d.\n', 100*correct/(correct+incorrect),correct, correct+incorrect);
 
-    fileID = fopen('.\label.txt');
+    fileID = fopen(strcat(folderPath,'\','.\label.txt'));
     textline = textscan(fileID, '%[^\n]');
     numSamples = length(textline{1});
     classPerf = struct();

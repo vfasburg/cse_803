@@ -104,7 +104,6 @@ texture_energy_maps(:,:,11) = (texture_energy_maps(:,:,11) + texture_energy_maps
 % Remove the unused masks from the set
 texture_energy_maps(:,:,[4,8,12,9,13,14]) = [];
 
-% Determine the mode of each texture energy map
 texture_energy_measure_vector = zeros(1, 9);
 for i = 1:9
     current_TEM = texture_energy_maps(:,:,i);
