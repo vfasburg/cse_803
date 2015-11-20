@@ -4,10 +4,11 @@ function test(trainingData, folderPath)
     end
 
     dirData = dir(folderPath);
+    cd(folderPath);
         %get number of training samples
     for idx = 1:length(dirData)
         file = dirData(idx).name;
-        if(length(file) > 4 & (file(end-3:end) == '.jpg' | file(end-3:end) == '.jpg'))
+        if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
             if ~exist('filenames', 'var');
                 filenames = char(file);
             else
@@ -18,7 +19,7 @@ function test(trainingData, folderPath)
     data = struct([]);
     parfor idx = 1:size(filenames,1)
         file = strtrim(filenames(idx,:));
-        if(length(file) > 4 & file(end-3:end) == '.jpg')
+        if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
             try
                 img = imread(strcat(folderPath,'\',file));
             catch
@@ -55,9 +56,9 @@ function test(trainingData, folderPath)
         end
     end
     
-    correct = 0;
-    incorrect = 0;
-    
+%     correct = 0;
+%     incorrect = 0;
+%     
 %     for idx = 1:length(data)
 %         file = data(idx).('file');
 %         label = data(idx).('label');
@@ -70,7 +71,7 @@ function test(trainingData, folderPath)
 %     end
 %     fprintf('%2.2f percent correct. %d out of %d.\n', 100*correct/(correct+incorrect),correct, correct+incorrect);
 
-    fileID = fopen('C:\Users\Vince\Documents\GitHub\cse_803\imaged_tryout\label.txt');
+    fileID = fopen('.\label.txt');
     textline = textscan(fileID, '%[^\n]');
     numSamples = length(textline{1});
     classPerf = struct();
@@ -84,7 +85,8 @@ function test(trainingData, folderPath)
         for linenum = 1:numSamples
             %extract labels from line of text
             truelabels = textline{1}{linenum};
-            truelabels = truelabels(length(file)+1:end);
+            spaces = strfind(truelabels, ' ');
+            truelabels = truelabels(spaces(1)+1:end);
             if(~isempty(strfind(truelabels,curClass)))
                 classPerf.(curClass).('numinclass') = classPerf.(curClass).('numinclass') + 1;
             else
@@ -98,16 +100,16 @@ function test(trainingData, folderPath)
         label = data(idx).('label');
         fprintf('file: %s label: %s\n', file, label);
         linenum = 1;
-        while linenum <= length(textline{1}) & isempty(strfind(textline{1}{linenum}, file))
+        curline = textline{1}{linenum};
+        while linenum <= length(textline{1}) & isempty(strfind(curline, file))
             linenum = linenum + 1;
+            curline = textline{1}{linenum};
         end
-        if(~isempty(strfind(textline{1}{linenum},file)))
+        fprintf('linenum %d filename: %s\n', linenum, file);
+        if(~isempty(strfind(curline,file)))
             %extract labels from line of text
             truelabels = textline{1}{linenum};
             truelabels = truelabels(length(file)+1:end);
-            %update number of images containing each class
-
-
 
             %check if label was determined correctly
             if(~isempty(strfind(truelabels,label)))
@@ -121,7 +123,6 @@ function test(trainingData, folderPath)
                    classPerf.(curClass).('rejected') = classPerf.(curClass).('rejected') + 1; 
                 end
             end
-
         end
     end
     for fieldnum = 1:length(fields)
