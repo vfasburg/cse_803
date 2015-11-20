@@ -8,10 +8,12 @@
 %        energy map for each mask, and (4) summarizing the results in a 9D
 %        feature vector for each image
 % Input: image, an r x c x 3 matrix of pixel intensity values
+%        mask, an r x c logical matrix indicating the food item
+%              region in the image
 % Output: texture_energy_measure_vector, a 1 x 9 vector containing the
 %         value that occurred most often in each of the nine texture
 %         energy features
-function [ texture_energy_measure_vector ] = Perform_Texture_Analysis( image )
+function [ texture_energy_measure_vector ] = Perform_Texture_Analysis( image, mask )
 
 %% Create the initial 5 texture masks
 level  = [ 1 4 6 4 1 ];   % Center-weighted local average
@@ -105,9 +107,11 @@ texture_energy_maps(:,:,[4,8,12,9,13,14]) = [];
 % Determine the mode of each texture energy map
 texture_energy_measure_vector = zeros(1, 9);
 for i = 1:9
-    % Set all zeros in the matrix to be "NaN" so they are not counted in
-    % the mode operation
     current_TEM = texture_energy_maps(:,:,i);
-    current_TEM(current_TEM==0) = NaN;
-    texture_energy_measure_vector(i) = mode(mode(current_TEM));
+    num_region_pixels = sum(sum(mask));
+    region_intensity_sum = sum(sum(current_TEM(mask == 1)));
+    % Use inentsity per region pixel as a feature
+    texture_energy_measure_vector(i) = region_intensity_sum / num_region_pixels;
+end
+
 end
