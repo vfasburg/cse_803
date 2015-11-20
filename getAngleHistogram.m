@@ -1,89 +1,80 @@
-function objectAngleHistogramNorm = getAngleHistogram( image, colorNum, stepSize )
-% inputs: a colored binary image and the "color" of the object
-%         you are intersted in (1, 2, 3, 4, etc).
+function objectAngleHistogramNorm = getAngleHistogram( mask, stepSize, colorNum )
+% inputs: the mask for the image which tells which part is
+%         foreground vs. background, and the stepSize
+%         which is the number of pixels that are jumped over for each
+%         tangent angle calculation.
 %
-% return: the 1x360 matrix for the normalized tangent angle histogram of the object
+% return: the normalized 1x8 matrix for the normalized tangent angle
+%         histogram of the object where angles are rounded to their
+%         nearsst 45 degree.
     
     objectAngleHistogram = zeros(1,360);
+    objectAngleHistogram45 = zeros(1,8);
     
-    borderImage = getBorder(image);
-    [row,col] = find(borderImage == colorNum);
+    % create binary image from mask
+    binaryImage = mask;
+    %imshow(binaryImage);
     
-    % set first pixel
-    pixelNum = 1;
-    r = row(1);
-    c = col(1);
-    rowOrdered(pixelNum) = r;
-    colOrdered(pixelNum) = c;
+    % create border of binary image
+    borderImage = getBorder(binaryImage);
+    %imshow(borderImage);
     
-    % make list of pixel values in order around object
-    perimeterDone = 0;
-    while perimeterDone == 0
-        borderImage(r,c) = 0;
+    % get angle of axis of most inertia
+    % this will act as our axis of reference to make this
+    % rotation invarient
+    [ ~, thetaMax ] = getMostInertia(binaryImage, colorNum);
+    
+    d = size(borderImage);
+    for r = 1:d(1)
+        for c = 1:d(2)
+            if borderImage(r,c) ~= 0
+                rowCurrent = r;
+                colCurrent = c;
+               
+                while (rowCurrent ~= 0 && colCurrent ~= 0)
+                    rowNext = rowCurrent;
+                    colNext = colCurrent;
+                    
+                    % loop through to get pixel stepSize ahead
+                    for i = 1:stepSize
+                        [rowNext, colNext] = findNext(rowNext,colNext,borderImage,colorNum);
+                    end
 
-        if borderImage(r+1,c) == colorNum % a 4 neighbor is connected
-            r = r + 1;
-        elseif borderImage(r-1,c) == colorNum
-            r = r - 1;
-        elseif borderImage(r,c+1) == colorNum
-            c = c + 1;
-        elseif borderImage(r,c-1) == colorNum
-            c = c - 1;
-        elseif borderImage(r+1,c+1) == colorNum % a 8-4 neightbr is connected
-            r = r + 1;
-            c = c + 1;
-        elseif borderImage(r+1,c-1) == colorNum 
-            r = r + 1;
-            c = c - 1;
-        elseif borderImage(r-1,c+1) == colorNum
-            r = r - 1;
-            c = c + 1;
-        elseif borderImage(r-1,c-1) == colorNum
-            r = r - 1;
-            c = c - 1;
-        else
-            perimeterDone = 1;
+                    % calculate tangent angle
+                    if (rowNext ~= 0 && colNext ~= 0)     
+                        rowDiff = rowCurrent - rowNext;
+                        colDiff = colNext - colCurrent;
+
+                        % in range 0 to 180 and 0 to -180
+                        angle = round( 180/pi*atan2(rowDiff, colDiff) );
+
+                        % put in range 1 - 360 degrees
+                        if angle <= 0
+                            angle = 360 + angle;
+                        end
+
+                        % shift based on axis of most inertia
+                        angle = angle - round(thetaMax);
+
+                        % wrap pixels around
+                        if angle <= 0
+                            angle = 360 + angle;
+                        end 
+
+                        objectAngleHistogram(angle) = objectAngleHistogram(angle) + 1;
+                        
+                        borderImage(rowCurrent,colCurrent) = 0;
+                        [rowCurrent, colCurrent] = findNext(rowCurrent,colCurrent,borderImage,colorNum);
+                    else
+                        rowCurrent = 0;
+                        colCurrent = 0;
+                    end
+                end
+            end
         end
-        
-        if perimeterDone == 0
-            pixelNum = pixelNum + 1;
-            rowOrdered(pixelNum) = r;
-            colOrdered(pixelNum) = c;
-        end
-    end
-    
-    [ ~, thetaMax ] = getMostInertia(image, colorNum);
-    
-    for i = 1:pixelNum
-        startPixel = i;
-        endPixel = i + stepSize;
-        
-        % wrap pixels around
-        if endPixel > pixelNum
-            endPixel = endPixel - pixelNum;
-        end
-        
-        rowDiff = rowOrdered(startPixel) - rowOrdered(endPixel);
-        colDiff = colOrdered(endPixel) - colOrdered(startPixel);
-        
-        % in range 0 to 180 and 0 to -180
-        angle = round( atan2d(rowDiff, colDiff) );
-        
-        % put in range 1 - 360 degrees
-        if angle <= 0
-            angle = 360 + angle;
-        end
-        
-        angle = angle - round(thetaMax);
-        % wrap pixels around
-        if angle <= 0
-            angle = 360 + angle;
-        end       
-        
-        objectAngleHistogram(angle) = objectAngleHistogram(angle) + 1;
-    end
+    end         
          
-% every 45 degrees
+        % every 45 degrees
         objectAngleHistogram45(1) = sum(objectAngleHistogram(338:360)) + sum(objectAngleHistogram(1:22)); % 0
         objectAngleHistogram45(2) = sum(objectAngleHistogram(23:67)); % 45
         objectAngleHistogram45(3) = sum(objectAngleHistogram(68:112)); % 90
@@ -96,7 +87,13 @@ function objectAngleHistogramNorm = getAngleHistogram( image, colorNum, stepSize
         objectAngleHistogram45Norm = objectAngleHistogram45 ./ sum(objectAngleHistogram45);
         objectAngleHistogramNorm = objectAngleHistogram45Norm;
         
-% every 30 degrees        
+        % plot histogram
+%         figure();
+%         x = linspace(1,8,8);
+%         bar(x, objectAngleHistogramNorm, 'r');
+%         axis([0 9 0 1]);
+        
+        % every 30 degrees        
 %         objectAngleHistogram30(1) = sum(objectAngleHistogram(345:360)) + sum(objectAngleHistogram(1:14)); % 0
 %         objectAngleHistogram30(2) = sum(objectAngleHistogram(15:44)); % 30
 %         objectAngleHistogram30(3) = sum(objectAngleHistogram(45:74)); % 60

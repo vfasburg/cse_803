@@ -11,11 +11,12 @@ function classStats = get_class_data(sampleData)
             classData.(field) = sampleData(sample).features;
         end
     end
-    
+    classData.('frenchfry') = classData.('fries');
+    classData = rmfield(classData, 'fries');
     classes = fieldnames(classData);
     classStats = struct();
     featureMax = -inf*ones(size(sampleData(sample).features));
-    featureMin =  inf*ones(size(sampleData(sample).features));
+    %featureMin =  inf*ones(size(sampleData(sample).features));
     for idx = 1:length(classes)
         curData = classData.(classes{idx});
         classStats.(classes{idx}).('means') = mean(curData);
