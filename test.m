@@ -32,11 +32,16 @@ function test(trainingData, folderPath)
             end
             greyImg = get_best_grey(img);
             [thresholds, H] = choose_thresholds(greyImg);
-            %training data only has 1 food, so only need 1 threshold
-            [~, minidx] = min(H(thresholds(2:end-1)./2));
-            minidx = minidx + 1;  %add 1 bc 0 doesnt count
-            thresholds = [0 thresholds(minidx) 256]; 
-            [bkgndStart, bkgndEnd] = find_background(greyImg, thresholds);
+            %patch so that entire image is used if no bckgnd is found
+            if(length(thresholds) == 2)
+                bkgndStart = -1;
+            else
+                %training data only has 1 food, so only need 1 threshold
+                [~, minidx] = min(H(thresholds(2:end-1)./2));
+                minidx = minidx + 1;  %add 1 bc 0 doesnt count
+                thresholds = [0 thresholds(minidx) 256]; 
+                [bkgndStart, ~] = find_background(greyImg, thresholds);
+            end
             for regionIdx = 2:length(thresholds)
                 regionStart = thresholds(regionIdx-1);
                 regionEnd = thresholds(regionIdx);
@@ -49,6 +54,7 @@ function test(trainingData, folderPath)
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
+                % imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
                 label = classify(trainingData, region, mask);
                 data(idx).('label') = label;
             end
@@ -100,11 +106,12 @@ function test(trainingData, folderPath)
         fprintf('file: %s label: %s\n', file, label);
         linenum = 1;
         curline = textline{1}{linenum};
-        while linenum <= length(textline{1}) & isempty(strfind(curline, file))
+        while linenum <= length(textline{1}) & isempty(strfind(curline, file(1:end-3)))
             linenum = linenum + 1;
             curline = textline{1}{linenum};
         end
-        fprintf('linenum %d filename: %s\n', linenum, file);
+        %fprintf('linenum %d filename: %s\n', linenum, file);
+
         if(~isempty(strfind(curline,file)))
             %extract labels from line of text
             truelabels = textline{1}{linenum};
@@ -130,7 +137,7 @@ function test(trainingData, folderPath)
         in = classPerf.(curClass).('numinclass');
         rej = classPerf.(curClass).('rejected');
         out = classPerf.(curClass).('numnotinclass');
-        fprintf('class: %s detected %d of %d (%f percent) rejected %d of %d (%f percent) avg %f percent\n', ...
+        fprintf('class: %s \tdetected %d of %d (%.2f percent) rejected %d of %d (%.2f percent) avg %f percent\n', ...
             curClass, det, in, det/in*100, rej, out, rej/out*100, mean([det/in*100 rej/out*100]));
     end
 end

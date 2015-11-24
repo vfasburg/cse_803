@@ -87,6 +87,10 @@ function objectAngleHistogramNorm = getAngleHistogram( mask, stepSize, colorNum 
         objectAngleHistogram45Norm = objectAngleHistogram45 ./ sum(objectAngleHistogram45);
         objectAngleHistogramNorm = objectAngleHistogram45Norm;
         
+        if(min(min(mask)) == 1)
+            objectAngleHistogramNorm = zeros(size(objectAngleHistogramNorm));
+        end
+        
         % plot histogram
 %         figure();
 %         x = linspace(1,8,8);
