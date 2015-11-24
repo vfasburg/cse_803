@@ -22,13 +22,14 @@ function medianHist = median_hist( image )
     vertVector = vertVector.';
     medianFilter = vertVector(:) * horVector;
     
+    % add values to hitogram
     for i=1:numel(image)
         curBin = floor(image(i)/binWidth) + 1;
         medianHist(curBin) = medianHist(curBin) + medianFilter(i);
     end
     medianHist = medianHist./sum(medianHist);   
     
-    bar(linspace(1,numBins,numBins),medianHist);
+    %bar(linspace(1,numBins,numBins),medianHist);
 end
 
 
