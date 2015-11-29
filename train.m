@@ -15,7 +15,7 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
     data = struct([]);
     parfor idx = 1:size(filenames,1)
         file = strtrim(filenames(idx,:));
-        if(length(file) > 4 & file(end-3:end) == '.jpg')
+        if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
             try
                 img = imread(strcat(folderPath,'\',file));
             catch
