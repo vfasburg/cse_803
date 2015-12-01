@@ -5,7 +5,7 @@ function label = classify(classStats, img, mask)
     imgFeatures = get_features(img, mask);
     minWeightedDist = inf;
     label = '';
-    weights = [(ones(1,64))/64 1 0*(ones(1,8))/8]; % get_range_texture
+    weights = [(ones(1,64))/64 0.5 0.5]; % get_range_texture
     % weights = [(ones(1,64))/64 (ones(1,3))/3 0*(ones(1,8))/8]; % get_laws_texture_energy
     % Other possibility: raises strawberry and tomato, lowers banana
     % weights = [(ones(1,64))/64 (ones(1,3))/2 0*(ones(1,8))/8];
