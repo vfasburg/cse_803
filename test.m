@@ -152,4 +152,6 @@ function performance = test(trainingData, folderPath, STDOUT)
         end
         performance(fieldnum) = mean([det/in*100 rej/out*100]);
     end
+    % first 3 are apple red, green, yellow. Use same performance for all 3
+    performance = [performance(1); performance(1); performance(1); performance(2:end)];
 end
