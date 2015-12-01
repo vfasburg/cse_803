@@ -16,7 +16,7 @@ function label = classify(classStats, img, mask)
         means = classStats.(classes{idx}).('means');
         devs = classStats.(classes{idx}).('devs');
         meanDiffs = abs(imgFeatures - means);
-        scaledMeanDiffs = meanDiffs ./ max(0.1*ones(size(devs)),devs);
+        scaledMeanDiffs = meanDiffs ./ max(0.5*ones(size(devs)),devs);
         weightedMeanDiffs = scaledMeanDiffs .* weights;
         dist = sqrt(sum(weightedMeanDiffs.^2));
         if(dist < minWeightedDist)
