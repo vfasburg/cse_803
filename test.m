@@ -1,6 +1,10 @@
-function test(trainingData, folderPath)
+function performance = test(trainingData, folderPath, STDOUT)
     if nargin < 2
         folderPath = '.\Testing_Images';
+    end
+    
+    if nargin < 3
+        STDOUT = 1;
     end
 
     dirData = dir(folderPath);
@@ -22,7 +26,9 @@ function test(trainingData, folderPath)
             try
                 img = imread(strcat(folderPath,'\',file));
             catch
-                fprintf('file: %s has unsupported formatting', file);
+                if STDOUT > 0
+                    fprintf('file: %s has unsupported formatting', file);
+                end
                 continue;
             end
             data(idx).('file') = file;
@@ -103,7 +109,9 @@ function test(trainingData, folderPath)
     for idx = 1:length(data)
         file = data(idx).('file');
         label = data(idx).('label');
-        fprintf('file: %s label: %s\n', file, label);
+        if STDOUT > 0
+            fprintf('file: %s label: %s\n', file, label);
+        end
         linenum = 1;
         curline = textline{1}{linenum};
         while linenum <= length(textline{1}) & isempty(strfind(curline, file(1:end-3)))
@@ -131,13 +139,17 @@ function test(trainingData, folderPath)
             end
         end
     end
+    performance = zeros(length(fields), 1);
     for fieldnum = 1:length(fields)
         curClass = strtrim(fields{fieldnum});
         det = classPerf.(curClass).('detected');
         in = classPerf.(curClass).('numinclass');
         rej = classPerf.(curClass).('rejected');
         out = classPerf.(curClass).('numnotinclass');
-        fprintf('class: %s \tdetected %d of %d (%.2f percent) rejected %d of %d (%.2f percent) avg %f percent\n', ...
-            curClass, det, in, det/in*100, rej, out, rej/out*100, mean([det/in*100 rej/out*100]));
+        if STDOUT > 0
+            fprintf('class: %s \tdetected %d of %d (%.2f percent) rejected %d of %d (%.2f percent) avg %f percent\n', ...
+                curClass, det, in, det/in*100, rej, out, rej/out*100, mean([det/in*100 rej/out*100]));
+        end
+        performance(fieldnum) = mean([det/in*100 rej/out*100]);
     end
 end
