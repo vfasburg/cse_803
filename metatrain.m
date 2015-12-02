@@ -4,7 +4,7 @@ function metatrain(folderPath, testFolder)
     %get list of training samples
     for idx = 1:length(dirData)
         file = dirData(idx).name;
-        if(length(file) > 4 & file(end-3:end) == '.jpg')
+        if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
             if ~exist('filenames', 'var');
                 filenames = char(file);
             else
