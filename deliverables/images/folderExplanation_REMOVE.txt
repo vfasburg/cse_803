@@ -1,0 +1,1 @@
+\images: includes all collected images used for training and testing of the system
