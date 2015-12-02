@@ -2,6 +2,9 @@
 % indicating the location of the food item in the full image
 % returns best label to be attached to that image
 function label = classify(classStats, img, mask)
+    if sum(sum(mask)) < 0.1 * numel(mask)
+        mask = ones(size(mask));
+    end
     imgFeatures = get_features(img, mask);
     minWeightedDist = inf;
     label = '';
