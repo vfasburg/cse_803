@@ -60,7 +60,7 @@ function performance = test(trainingData, folderPath, STDOUT)
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
-                % imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
+                %imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
                 label = classify(trainingData, region, mask);
                 data(idx).('label') = label;
             end
