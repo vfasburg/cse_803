@@ -28,6 +28,9 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 img = imresize(img, sqrt(250000/(size(img,1)*size(img,2))));
             end
             labels = get_labels(file);
+            if isempty(labels)
+                continue;
+            end
             data(idx).('labels') = labels;
             greyImg = get_best_grey(img);
             [thresholds, H] = choose_thresholds(greyImg);
