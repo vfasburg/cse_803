@@ -12,6 +12,8 @@ function H = rgb_hist(img, mask)
             end
         end
     end
+    H = conv(H, gausswin(3));
+    H = H(2:end-1);
     H = H./sum(H);
     % bar(H);
 end
