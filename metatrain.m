@@ -1,6 +1,7 @@
 function metatrain(folderPath, testFolder)
+tic
     dirData = dir(folderPath);
-    numTests = 3;
+    numTests = 20;
     %get list of training samples
     for idx = 1:length(dirData)
         file = dirData(idx).name;
@@ -76,6 +77,24 @@ function metatrain(folderPath, testFolder)
         fprintf('best ignored files: %s\n', perfData.(curClass).bestIgnored);
         fprintf('best performance: %f\n\n', perfData.(curClass).bestPerf);
     end
+    
+        for classIdx = 1:length(classNames)
+            curClass = strtrim(classNames{classIdx});
+            bestIgnoredString = perfData.(curClass).bestIgnored;
+            if isempty(bestIgnoredString)
+                continue
+            end
+            bestIgnoredString = strtrim(bestIgnoredString);
+            bestIgnoredArray = strsplit(bestIgnoredString,' ');
+            for fileIdx = 1:length(bestIgnoredArray)
+                curFile = bestIgnoredArray(fileIdx);
+                if(length(curFile{1}) > 4 & strcmp(curFile{1}(end-3:end),'.tmp') == 0)
+                    movefile(strcat(folderPath,'\',curFile{1}), strcat(folderPath,'\',curFile{1},'.tmp'));
+                end
+            end
+        end
+toc
+end
 
     
     
