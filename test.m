@@ -1,4 +1,5 @@
 function performance = test(trainingData, folderPath, STDOUT)
+tic
     if nargin < 2
         folderPath = '.\Testing_Images';
     end
@@ -106,7 +107,7 @@ function performance = test(trainingData, folderPath, STDOUT)
             end
         end
     end
-
+toc
     for idx = 1:length(data)
         file = data(idx).('file');
         label = data(idx).('label');
