@@ -29,6 +29,9 @@ function label = classify(classStats, img, mask)
             if ~isempty(strfind(label, 'apple'))
                 label = 'apple';
             end
+            if ~isempty(strfind(label, 'egg'))
+                label = 'egg';
+            end
         end
     end
 end

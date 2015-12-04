@@ -50,6 +50,8 @@ function metatrain(folderPath, testFolder)
         % perform training & testing
         classStats = train(folderPath);
         performance = test(classStats, testFolder, 0);
+        % compensate for the 3 apple classes and 2 egg classes
+        performance = [performance(1); performance(1); performance(1); performance(2); performance(2); performance(3:end)];
         for classIdx = 1:length(classNames)
             curClass = strtrim(classNames{classIdx});
             if(performance(classIdx) > perfData.(curClass).bestPerf)
