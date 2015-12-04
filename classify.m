@@ -12,6 +12,7 @@ function label = classify(classStats, img, mask)
     % weights = [(ones(1,64))/64 (ones(1,3))/3 0*(ones(1,8))/8]; % get_laws_texture_energy
     % Other possibility: raises strawberry and tomato, lowers banana
     % weights = [(ones(1,64))/64 (ones(1,3))/2 0*(ones(1,8))/8];
+    %classStats.featureMax(1:64) = mean(classStats.featureMax(1:64));
     weights = weights./max(0.1,classStats.featureMax);
     classStats = rmfield(classStats, 'featureMax');
     classes = fieldnames(classStats);

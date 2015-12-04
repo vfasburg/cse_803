@@ -4,6 +4,9 @@ function classStats = get_class_data(sampleData)
     %build std devs for each feature of each class
     classData = struct();
     for sample = 1:length(sampleData) %for each sample
+        if(isempty(sampleData(sample).labels))
+            continue;
+        end
         field = sampleData(sample).labels{1};
         if(isfield(classData, field))
             classData.(field) = [classData.(field); sampleData(sample).features];

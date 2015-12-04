@@ -56,6 +56,7 @@ function performance = test(trainingData, folderPath, STDOUT)
                 end
                 mask = (greyImg >= regionStart & greyImg < regionEnd);
                 %mask = imclose(mask, strel('disk', 10)); %replace with hole filling alg
+                %mask = imopen(mask, strel('disk', 10)); %replace with hole filling alg
                 mask = imfill(mask,'holes');
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
@@ -146,6 +147,9 @@ function performance = test(trainingData, folderPath, STDOUT)
         in = classPerf.(curClass).('numinclass');
         rej = classPerf.(curClass).('rejected');
         out = classPerf.(curClass).('numnotinclass');
+        if(det == 0)
+            rej = 0;
+        end
         if STDOUT > 0
             fprintf('class: %s \tdetected %d of %d (%.2f percent) rejected %d of %d (%.2f percent) avg %f percent\n', ...
                 curClass, det, in, det/in*100, rej, out, rej/out*100, mean([det/in*100 rej/out*100]));
