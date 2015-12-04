@@ -16,6 +16,7 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
     parfor idx = 1:size(filenames,1)
         file = strtrim(filenames(idx,:));
         if(length(file) > 4 & strcmpi(file(end-3:end),'.jpg'))
+            % fprintf('Processing file %s, Texture_Analysis_Results index %i...\n', file, idx);
             try
                 img = imread(strcat(folderPath,'\',file));
             catch
@@ -51,7 +52,7 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 region = img.*cast(mask3d, 'uint8');
                 % imshow(region);
                 %imshow(mask);
-                %imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
+                % imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
                 featureVector = get_features(region, mask);
                 data(idx).('features') = featureVector;
             end
