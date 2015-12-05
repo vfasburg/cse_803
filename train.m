@@ -50,9 +50,6 @@ function classStats = train(folderPath) % 'C:\Users\Vince\Documents\GitHub\cse_8
                 mask = imfill(mask,'holes');
                 mask3d = repmat(mask,[1 1 3]);
                 region = img.*cast(mask3d, 'uint8');
-                % imshow(region);
-                %imshow(mask);
-                % imwrite(region, strcat(folderPath, '\foregrounds\',file(1:end-4),'_foreground.jpg'));
                 featureVector = get_features(region, mask);
                 data(idx).('features') = featureVector;
             end

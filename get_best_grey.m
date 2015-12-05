@@ -6,14 +6,6 @@ function fullGreyImg = get_best_grey(img)
     end
     [~, maxColor] = max(result);
     
-%     color = [0 0 0; 0 0 1; 0 1 0; 1 0 0; 0 1 1; 1 0 1; 1 1 0; 1 1 1];
-%     for row = 1:8
-%         temp_img = color(row,1)*img(:,:, 1) + color(row,2)*img(:,:, 2) + color(row,3)*img(:,:, 3);
-%         result(row) = std(cast(temp_img(:), 'single'));
-%     end
-%     [~, bestRow] = max(result);
-%     greyImg = color(bestRow,1)*img(:,:, 1) + color(bestRow,2)*img(:,:, 2) + color(bestRow,3)*img(:,:, 3);
-    
     greyImg = img(:,:,maxColor);
     smooth_len = 7;
     half_len = floor(smooth_len/2);
