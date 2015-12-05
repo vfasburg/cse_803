@@ -39,12 +39,6 @@ function histo = color_hist(img)
 %     end
 %     histo = [histo(minShift+1:end); histo(1:minShift)];
 %     
-%     % plot reults
-% %     figure;
-% %     bar(histo);
-% %     str = sprintf('Histogram shifted down by %d degrees', minShift*360/numBins);
-% %     title(str);
-%     
 %     [~, maxIdx] = max(histo);
 %     
 %     %convert to max hue degrees
