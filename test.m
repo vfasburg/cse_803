@@ -157,5 +157,5 @@ toc
         end
         performance(fieldnum) = mean([det/in*100 rej/out*100]);
     end
-    mean(performance)
+    fprintf('Overall Average: %f', mean(performance(performance>0)));
 end
